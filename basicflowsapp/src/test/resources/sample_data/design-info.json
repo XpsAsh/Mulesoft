@@ -1,0 +1,13 @@
+{
+  "sampleData": {
+    "0072cbe7-9b64-4aa8-9dd5-e530f352fe0b": {
+      "vars-rootMessage": "sample_data/message.dwl"
+    },
+    "4541cbef-c545-47c2-8523-9da23ee297c6": {
+      "payload": "sample_data/list_json.json"
+    },
+    "320e0fa7-2915-491d-8680-9d55444c9c15": {
+      "payload": "sample_data/family.xml"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="xmlNewType" format="xml">
+      <types:example format="xml" element="parent" location="examples/test.xml"/>
+    </types:type>
+    <types:type name="xmlprocessingtype" format="xml">
+      <types:example format="xml" element="{http://training.mulesoft.com/simspons}family" location="examples/xmlprocessing-1.xml"/>
+    </types:type>
+    <types:type name="jsonprocessingType" format="json">
+      <types:shape format="weave" example="examples/jsontoxmlprocessing-1.json"><![CDATA[%dw 2.0
+
+type jsonprocessingType = Array<{|  lastName: String,   firstName: String,   age: Number {"typeId": "int"}|}> {"example": "[{\\\"lastName\\\":\\\"Simpson\\\",\\\"firstName\\\":\\\"Homer\\\",\\\"age\\\":39},{\\\"lastName\\\":\\\"Simpson\\\",\\\"firstName\\\":\\\"Lisa\\\",\\\"age\\\":8},{\\\"lastName\\\":\\\"Simpson\\\",\\\"firstName\\\":\\\"Bart\\\",\\\"age\\\":10},{\\\"lastName\\\":\\\"Simpson\\\",\\\"firstName\\\":\\\"Marge\\\",\\\"age\\\":36},{\\\"lastName\\\":\\\"Simpson\\\",\\\"firstName\\\":\\\"Maggie\\\",\\\"age\\\":1}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#351121c5-5496-4c86-afd9-2ad66040ae45">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="xmlNewType"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#4541cbef-c545-47c2-8523-9da23ee297c6">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="jsonprocessingType"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

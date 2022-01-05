@@ -1,0 +1,10 @@
+<parent>
+	<child>
+		<sib1>sib1</sib1>
+		<sib2>sib2</sib2>
+	</child>
+	<child>
+		<sib1>sib3</sib1>
+		<sib2>sib4</sib2>
+	</child>			
+</parent>

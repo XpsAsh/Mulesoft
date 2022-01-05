@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="basicflowsappFlow" doc:id="9999b229-8840-4203-b72c-aaea45fcad9d" >
+		<http:listener doc:name="Listener" doc:id="aa7a0844-8d90-4ce0-8946-2454768affc3" path="/basicflowsapp/{who}" config-ref="HTTP_Listener_config"/>
+		<choice doc:name="Choice" doc:id="4ad94d6b-609c-41c6-a963-42cf224ac749" >
+			<when expression="#[attributes.uriParams.who == 'parallelforeach']">
+				<logger level="INFO" doc:name="Logger" doc:id="66e55786-3f5f-400c-89ff-5c5ac56dd062" message="#['   type of payload   '  ++ typeOf(payload)]" />
+				<set-payload value="#[[77,88,99,66,55,44,22,11]]" doc:name="Copy_of_Set Payload" doc:id="3e33ab69-9b5f-4d4c-9a08-053b504fbd0c" />
+				<parallel-foreach doc:name="Parallel For Each" doc:id="d485a85b-8009-433a-b3ea-0daf99d5de29" collection="#[payload]" maxConcurrency="4">
+					<logger level="INFO" doc:name="Copy_of_Logger" doc:id="2a42c812-240c-439d-a363-982479d89a61" message='#["counter number   " ++  "    payload   " ++ payload]' />
+					<logger level="INFO" doc:name="Copy_of_Copy_of_Logger" doc:id="370e670d-f502-443f-89e0-23058c4634f0" message="#[vars.rootMessage]" />
+					<set-payload value="hello" doc:name="Copy_of_Copy_of_Set Payload" doc:id="f4731e07-dda5-4332-afc4-e8a7d7592009" />
+				</parallel-foreach>
+			</when>
+			<when expression="#[attributes.uriParams.who == 'foreachxml']">
+				<logger level="INFO" doc:name="Copy_of_Logger" doc:id="6a8a64f5-0930-4764-a5a3-a00c1d3828ba" message="#['   type of payload   '  ++ typeOf(payload.parent.*child)]" />
+				<logger level="INFO" doc:name="Copy_of_Copy_of_Logger" doc:id="0c6cf201-1da5-430d-af8f-6ef08771a5cc" message="#[payload.parent.*child]" />
+				<foreach doc:name="For Each" doc:id="351121c5-5496-4c86-afd9-2ad66040ae45" collection="#[output application/java&#10;---&#10;payload.parent.*child]">
+					<logger level="INFO" doc:name="Logger" doc:id="2605d5c0-3325-44ef-9015-7360b3bf18f6" message="test"/>
+					<logger level="INFO" doc:name="Logger" doc:id="85c3773a-13b4-4441-b334-5a55ed7f4160" message='#["counter number   " ++ vars.counter]' />
+					<ee:transform doc:name="Transform Message" doc:id="0072cbe7-9b64-4aa8-9dd5-e530f352fe0b" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+payload: vars.rootMessage.payload.parent.*child[1].sib2
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<logger level="INFO" doc:name="Copy_of_Copy_of_Logger" doc:id="3d6f0f67-af26-4c35-abc0-18865a103c72" message="#[payload]" />
+		
+</foreach>
+				<logger level="INFO" doc:name="Copy_of_Logger" doc:id="1671554e-1448-482c-8fb2-790cc970a9b4" message="#[payload]" />
+				<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]" doc:name="Copy_of_Set Payload" doc:id="2fc35ad1-3dda-45d2-95c9-d06809c17250" />
+			
+			
+			
+</when>
+			<otherwise >
+				<set-payload value="#[[77,88,99,66,55,44,22,11]]" doc:name="Copy_of_Copy_of_Copy_of_Set Payload" doc:id="c588c9c8-c4be-4931-b94b-535095627961" />
+				<logger level="INFO" doc:name="Copy_of_Copy_of_Logger" doc:id="b343a5ce-a693-4982-aeb0-42214200ebc1" message="#['   type of payload   '  ++ typeOf(payload)]" />
+				<foreach doc:name="For Each" doc:id="1db6e2bb-deb2-4505-94c8-a2eb44b65399" collection="#[payload]" batchSize="3">
+			<set-payload value="#[[77,88,99,66,55,44,22,11]]" doc:name="Copy_of_Set Payload" doc:id="3933cdc3-55bc-4110-81f5-bd0a77a6e775" />
+					<logger level="INFO" doc:name="Logger" doc:id="34f9f661-8e7f-4c05-a918-85e97118a80d" message="#[&quot;counter number   &quot; ++ vars.counter ++ &quot;    payload   &quot; ++ write(payload,'text/json')]" />
+			<logger level="INFO" doc:name="Copy_of_Logger" doc:id="efe7a281-ab58-4e01-ab73-ffeb1df201fe" message="#[message]" />
+					<set-payload value="hello" doc:name="Copy_of_Copy_of_Copy_of_Set Payload" doc:id="f16e0b11-d486-40d8-bd9f-26f600be2c8b" />
+		</foreach>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

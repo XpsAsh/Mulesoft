@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="JsontoXMLProcessingFlow" doc:id="6861f1bd-7e12-4957-90c4-8bf147abfe5a" >
+		<http:listener doc:name="Listener" doc:id="9eb1c6cc-b7cd-4133-aa24-9989c321b184" config-ref="HTTP_Listener_config" path="jsontoxmlprocessing/*"/>
+		<logger level="INFO" doc:name="Log the start" doc:id="f0290185-a6fa-4dc4-a69f-cc2bde3f4c37" message='received request'/>
+		<ee:transform doc:name="Transform Message" doc:id="4541cbef-c545-47c2-8523-9da23ee297c6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+ns simpsons http://training.mulesoft.com/simpsons
+ns ns1 http://training.mulesoft.com/simpsons1
+output application/xml encoding="ISO-8859-1" 
+
+---
+{
+	
+	simpsons#family @('vAtt2':'11','vAtt3':'66'): {(payload map
+	{
+		ns1#child @('vAtt1': ($.age >= 18)) : 
+		{
+			ns1#vLastName: $[0],
+			ns1#vFirstName: $[1],
+			simpsons#vAge: $[2] 
+		}
+		
+		}
+)	}
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
