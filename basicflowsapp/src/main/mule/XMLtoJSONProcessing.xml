@@ -8,7 +8,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	<flow name="XMLtoJSONProcessingFlow" doc:id="6861f1bd-7e12-4957-90c4-8bf147abfe5a" >
 		<http:listener doc:name="Listener" doc:id="9eb1c6cc-b7cd-4133-aa24-9989c321b184" config-ref="HTTP_Listener_config" path="xmltojsonprocessing/*" outputMimeType="application/xml"/>
 		<logger level="INFO" doc:name="Log the encoding and namespace" doc:id="f0290185-a6fa-4dc4-a69f-cc2bde3f4c37" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  encoding: (((payload.^raw as String) scan /encoding="([A-z0-9-]+)"/)[0][1] ),&#10;  namingspace: payload.family.#&#10;}]'/>
-		<logger level="INFO" doc:name="Log the raw payload" doc:id="f51fbca2-454d-4995-8115-1b3f1af12903" message="#[%dw 2.0&#10;output application/json&#10;---&#10;&#10;payload.^raw as String  ++ '   hello Mule test']" />
+		<logger level="INFO" doc:name="Log the raw payload" doc:id="f51fbca2-454d-4995-8115-1b3f1af12903" message="#[%dw 2.0&#10;output application/json&#10;---&#10;&#10;payload.^raw as String  ++ '   hello Mule test 1']" />
 		<ee:transform doc:name="Transform Message" doc:id="320e0fa7-2915-491d-8680-9d55444c9c15" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0ns ns0 http://training.mulesoft.com/simspons
